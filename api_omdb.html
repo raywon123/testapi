@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>api test</title>
+</head>
+
+
+<!-- CSS Styles -->
+<style>
+    .red {
+        background-color: red;
+    }
+
+    body {
+        padding-left: 50px;
+    }
+</style>
+
+<!-- HTML  -->
+
+<body>
+    <div class='target-div'>
+    </div>
+
+    <div class="display-poster"></div>
+
+    <!-- Javascript section    -->
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script type="text/javascript">
+
+        // global variables
+        let limit = 10;
+        let apiObject = {};
+
+        // -- function to do api call 
+        function searchOMDB(item) {
+
+
+            let url = "https://www.omdbapi.com/";
+            url += '?' + $.param({
+                't': "Matrix",
+                'plot': "short",
+                'apikey': "idontknow"
+            });
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                dataType: 'jsonp',
+
+            }).done(function (response) {
+                console.log(response);
+                apiObject = response;
+                displayOMDB(response);
+            }).fail(function (err) {
+                throw err;
+            });
+
+        };
+
+        // -- function to show api result to HTML
+        function displayOMDB(data) {
+
+            console.log(data);
+
+            let poster = $(".display-poster");
+
+            // adding on-click button
+            poster.prepend("<p><button class='click' data-id='clickid'>click me </button></p>")
+
+            // -- data from omdb
+            // console.log(omdb.Title);
+            // console.log(omdb.Runtime);
+            // console.log(omdb.Released);
+            // console.log(omdb.Rated);
+            // console.log(omdb.Plot);
+            // console.log(omdb.Poster);
+
+            // for (let i = 0; i < limit; i++) {
+
+            //     // still picture
+            //     // console.log(data.data[i].images.fixed_height_still.url);
+
+            //     // clickable image element
+            //     let imgButton = $("<button>");
+            //     let imgElement = $("<img>");
+
+            //     // Adding a class
+            //     imgElement.addClass("gif");
+            //     // Adding a data-attribute with a value of index i
+            //     imgElement.attr("data-gifindex", i);
+            //     imgElement.attr("src", data.data[i].images.fixed_width_still.url);
+            //     imgButton.append(imgElement);
+            //     poster.append(imgButton);
+
+            // }
+        }
+
+        function displayObject(data) {
+            console.log(data);
+        }
+
+        $(document).ready(function () {
+
+            // -- main program
+            searchOMDB("Austin");
+
+            // -- this line result in nothing because there is no return json yet.
+            // -- if you wait for the on click event first, then the data is ready.
+            displayObject(apiObject);
+
+        });
+
+        $(".display-poster").on("click", ".click", function (event) {
+            // Don't refresh the page!
+            event.preventDefault();
+
+            displayObject(apiObject);
+
+        });
+
+
+
+
+    </script>
+</body>
+
+</html>
